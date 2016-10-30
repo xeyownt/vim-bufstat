@@ -94,6 +94,19 @@ if exists('g:bufstat_inactive_hl_group')
 endif
 "}}}
 
+let s:separator_hl_group = 'StatusLine' "{{{2
+if exists('g:bufstat_separator_hl_group')
+  if hlexists(g:bufstat_separator_hl_group)
+    let s:separator_hl_group = g:bufstat_separator_hl_group
+  else
+    if s:debug > 0
+      echo 'bufstat.vim: Buffer separator highlight group `' . g:bufstat_separator_hl_group . '` does not exist!'
+      echo 'bufstat.vim: Falling back to default: Statusline'
+    endif
+  endif
+endif
+"}}}
+
 let s:modified_list_char = '+' "{{{2
 if exists('g:bufstat_modified_list_char')
   let s:modified_list_char = g:bufstat_modified_list_char
@@ -217,9 +230,10 @@ function BufstatGenerateList(...) "{{{2
       let bufdict.display = wrap[0] . bufdict.display . bufdict.flags . wrap[1]
 
       if bufdict.number == winbufnr(winnr())
-        let bufdict.display = '%#' . s:active_hl_group . '#' . bufdict.display . '%#' . s:inactive_hl_group . '#'
+        let bufdict.display = '%#' . s:active_hl_group . '#' . bufdict.display . '%#' . s:separator_hl_group . '#'
         let bufdict.active = 1
       else
+        let bufdict.display = '%#' . s:inactive_hl_group . '#' . bufdict.display . '%#' . s:separator_hl_group . '#'
         let bufdict.active = 0
       endif
 
@@ -268,8 +282,7 @@ function BufstatBuildStatusline() "{{{2
   call map(buffer_list_copy, "v:val.display" )
   let buffer_string = join(buffer_list_copy, s:join_string)
 
-  let status_string = '%<%#' . s:inactive_hl_group . '#'
-  let status_string .= buffer_string
+  let status_string = '%<%#' . s:separator_hl_group . '#' . buffer_string
 
   " if there are more buffers than are shown, show an > just like vim shows a
   " < at the start of the statusline when it's truncated
