@@ -396,7 +396,7 @@ endfunction
 " Autocommands {{{1
 
 augroup Bufstat
-  autocmd BufNew,BufEnter,VimResized * :call BufstatGenerateList()
+  autocmd BufNew,BufEnter,VimResized,WinEnter * :call BufstatGenerateList()
   autocmd BufDelete * :call BufstatGenerateList(expand('<abuf>'))
   autocmd VimEnter * :call BufstatRefreshStatuslines()
 
