@@ -393,6 +393,38 @@ endfunction
 
 "}}}
 
+" Function similar to bnext, but skipping over non-modifiable buffer (quickfix window...)
+function BufStatNext() "{{{2
+    " Get current buffer number
+    let bufcur=bufnr("%")
+    let bufmax=bufnr("$")
+    let bufnum=(bufcur % bufmax) + 1
+    while (bufnum != bufcur) && !( buflisted(bufnum) && getbufvar(bufnum, '&modifiable') )
+        let bufnum=(bufnum % bufmax) + 1
+    endwhile
+
+    if (bufnum != bufcur)
+        exe bufnum."b"
+    endif
+endfunction
+"}}}
+
+" Function similar to bprev, but skipping over non-modifiable buffer (quickfix window...)
+function BufStatPrev() "{{{2
+    " Get current buffer number
+    let bufcur=bufnr("%")
+    let bufmax=bufnr("$")
+    let bufnum=(bufcur + bufmax - 2) % bufmax + 1
+    while (bufnum != bufcur) && !( buflisted(bufnum) && getbufvar(bufnum, '&modifiable') )
+        let bufnum=(bufnum + bufmax - 2) % bufmax + 1
+    endwhile
+
+    if (bufnum != bufcur)
+        exe bufnum."b"
+    endif
+endfunction
+"}}}
+
 " Autocommands {{{1
 
 augroup Bufstat
