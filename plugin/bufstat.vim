@@ -142,6 +142,14 @@ endif
 
 function BufstatGenerateList(...) "{{{2
   "
+  " Don't change statusline if current buffer is not modifiable
+  "
+  " if !getbufvar(winbufnr(winnr()), '&modifiable')
+  if !&modifiable
+    return
+  endif
+
+  "
   " Generate a buffer list and store it in g:bufstat_buffer_list.
   "
   let g:bufstat_buffer_list = []
@@ -303,6 +311,14 @@ endfunction
 "}}}
 
 function BufstatScroll(dir) "{{{2
+  "
+  " Don't change statusline if current buffer is not modifiable
+  "
+  " if !getbufvar(winbufnr(winnr()), '&modifiable')
+  if !&modifiable
+    return
+  endif
+
   "
   " Increases or decreases s:chop_buffers
   "
